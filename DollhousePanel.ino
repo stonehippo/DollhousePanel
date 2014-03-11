@@ -28,6 +28,10 @@ enum analogButtons {
   BUTTON_FIVE
 };
 
+// NeoPixels (for the attic & !!!PARTY MODE!!!)
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
+
+// PWM board (controls the room lights)
 Adafruit_TLC59711 tlc = Adafruit_TLC59711(NUM_TLC59711, TLC_CLK, TLC_DATA);
 
 // 16x2 LCD display
@@ -61,15 +65,25 @@ int buttonFourPrevState = 1023;
 int buttonFivePrevState = 1023;
 
 void setup() {
+  // Fire up the LCD display
   lcd.begin(16, 2);
   lcd.print("Doll house");
   lcd.setCursor(0,1);
   lcd.print("lighting");
+  
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
+  
+  // initialize the NeoPixel strand
+  strip.begin();
+  strip.show();
+  
+  // Initialize the PWM board
   tlc.begin();
   tlc.write();
+  
+  // Set the default brightness for the rooms
   for (int i = 0; i < sizeof(roomBrightness); i++) {
     setRoomBrightness(i, roomBrightness[i]);
   }
