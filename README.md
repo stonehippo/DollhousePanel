@@ -6,7 +6,7 @@ This is the logic for a dollhouse lighting control system that I am building for
 
 This code is designed to drive an Arduino-compatible board with a several components attached. For my build, I'm using an Arduino clone from SmartMaker*, along with a few other boards from that system. Here's what I've got going:
 
-* Smartmaker Smartcore U–basically, a weird Arduino Uno)
+* Smartmaker Smartcore U–basically, a weird Arduino Uno
 * A Smartmaker Smartbus Quad–this provides the base for the whole system, as well as the power regulator for the Smartcore
 * Smartmaker Breakout–a simple breakout board for the microcontroller pins
 * Smartmaker LCD 16x2–a standard 16x2 LCD display
@@ -52,7 +52,7 @@ Here's how things map out for microcontroller pin usage in my build:
 	</tbody>
 </table>
 
-If you know anything the Arduino (or the microcontroller at it's core, the ATMega328), you'll realize that almost all of the pins available have been used in this build.
+If you know anything the Arduino (or the microcontroller at its core, the ATMega328), you'll realize that almost all of the pins available have been used in this build.
 
 One of the more annoying things about the Smartmaker stuff is poor planning for the pin usage for the various components. For example, because the 16x2 LCD is wired up directly, rather than with a serial backpack or the like, the board requires six of the Arduino's precious digital I/O pins.
 
