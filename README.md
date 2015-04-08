@@ -13,7 +13,7 @@ This code is designed to drive an Arduino-compatible board with a several compon
 * Smartmaker RGB LED board–a single RGB LED
 * Smartmaker Button 5A5–an array of 5 momentary switches, attached to analog pins on the Smartcore
 * Smartmaker AB Riser–a little board to give some stuff a lift!
-* Adafruint 12 channel PWM board-this is a sweet little board that gives you 12 channels for driving LEDs at 16-bit resolution
+* Adafruit 12 channel PWM board-this is a sweet little board that gives you 12 channels for driving LEDs at 16-bit resolution
 * Some Adafruit breadboard-friendly NeoPixels
 * RadioShack white LED strip–this was originally a single 60 LED, 1 meter strip, which I cut up to make a bunch of 3 LED strips (one for each room)
 
@@ -58,7 +58,7 @@ One of the more annoying things about the Smartmaker stuff is poor planning for 
 
 To be honest, I'd have used most of the pins even with a standard Arduino and components. The real rub here is the lack of choice when using Smartmaker's custom bus design. If I want to use these parts up (and I do), I have to work within the constraints imposed by them.
 
-The PWM board helps me address this somewhat. It's a nifty little board with a constant current driver and 16-bit resolution. It's ideal for driving LEDs. Thanks to it's twelve channels, I have enough PWM bandwith control the light levels in each room of the house indepentently.
+The PWM board helps me address this somewhat. This is a nifty little board with a constant current driver and 16-bit resolution. It's ideal for driving LEDs. Thanks to its twelve channels, I have enough PWM bandwidth control the light levels in each room of the house independently.
 
 ----------
 
