@@ -17,11 +17,11 @@ This code is designed to drive an Arduino-compatible board with a several compon
 * Some Adafruit breadboard-friendly NeoPixels
 * RadioShack white LED strip–this was originally a single 60 LED, 1 meter strip, which I cut up to make a bunch of 3 LED strips (one for each room)
 
+All of this is powered by a 12V 1A wall brick. The strip LEDs having a pretty good current draw, and the NeoPixels are no slouch, either.
+
 ## The Pins!
 
-One of the more annoying things about the Smartmaker stuff is a poor planning for the pin usage for the various components. For example, because the 16x2 LCD is wired up directly, rather than with a serial backpack or something, the board requires 6 of the Arduino's precious digital I/O pins. After factoring in the other components, I am using in almost all of the pins on the board.
-
-Here's how things map out:
+Here's how things map out for microcontroller pin usage in my build:
 
 <table>
 	<tbody>
@@ -52,7 +52,14 @@ Here's how things map out:
 	</tbody>
 </table>
 
+If you know anything the Arduino (or the microcontroller at it's core, the ATMega328), you'll realize that almost all of the pins available have been used in this build.
+
+One of the more annoying things about the Smartmaker stuff is poor planning for the pin usage for the various components. For example, because the 16x2 LCD is wired up directly, rather than with a serial backpack or the like, the board requires six of the Arduino's precious digital I/O pins.
+
+To be honest, I'd have used most of the pins even with a standard Arduino and components. The real rub here is the lack of choice when using Smartmaker's custom bus design. If I want to use these parts up (and I do), I have to work within the constraints imposed by them.
+
+The PWM board helps me address this somewhat. It's a nifty little board with a constant current driver and 16-bit resolution. It's ideal for driving LEDs. Thanks to it's twelve channels, I have enough PWM bandwith control the light levels in each room of the house indepentently.
+
 ----------
 
-\* I acquired the Smartmaker stuff as a backer reward from their less-than-stellar Kickstarter campaign. Expect for the components that I have used in this project, I have sold off all of my Smartmaker Open System components.
-
+\* I acquired the Smartmaker stuff as a backer reward from their less-than-stellar Kickstarter campaign. Except for the components that I have used in this project, I have sold off all of my Smartmaker Open System components.
