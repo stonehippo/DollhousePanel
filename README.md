@@ -58,7 +58,7 @@ One of the more annoying things about the Smartmaker stuff is poor planning for 
 
 To be honest, I'd have used most of the pins even with a standard Arduino and components. The real rub here is the lack of choice when using Smartmaker's custom bus design. If I want to use these parts up (and I do), I have to work within the constraints imposed by them.
 
-The PWM board helps me address this somewhat. This is a nifty little board with a constant current driver and 16-bit resolution. It's ideal for driving LEDs. Thanks to its twelve channels, I have enough PWM bandwidth control the light levels in each room of the house independently.
+The PWM board helps me address this somewhat. This is a nifty little board with a constant current driver and 16-bit resolution. It's ideal for driving LEDs. Thanks to its twelve channels, I have enough PWM bandwidth to control the light levels in each room of the house independently.
 
 ----------
 
