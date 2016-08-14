@@ -1,0 +1,10 @@
+void readButtonStates();
+void buttonHandler(int button, int &state, int &prevState, void(*handler)());
+void handleButtonOne();
+void handleButtonTwo();
+void handleButtonThree();
+void handleButtonFour();
+void handleButtonFive();
+void setRGBColor(int red, int green, int blue);
+void setRoomBrightness(int room, int level);
+void lightRooms();

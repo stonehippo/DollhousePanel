@@ -1,20 +1,11 @@
 #include <Arduino.h>
 
+#include "DollhousePanel.h"
+
 #include <Adafruit_TLC59711.h>
 #include <Adafruit_NeoPixel.h>
 #include <LiquidCrystal.h>
 #include <SPI.h>
-
-void readButtonStates();
-void buttonHandler(int button, int &state, int &prevState, void(*handler)());
-void handleButtonOne();
-void handleButtonTwo();
-void handleButtonThree();
-void handleButtonFour();
-void handleButtonFive();
-void setRGBColor(int red, int green, int blue);
-void setRoomBrightness(int room, int level);
-void lightRooms();
 
 const char NUM_TLC59711=1;
 const char TLC_DATA=12;
