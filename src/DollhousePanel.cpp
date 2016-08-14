@@ -1,7 +1,20 @@
+#include <Arduino.h>
+
 #include <Adafruit_TLC59711.h>
 #include <Adafruit_NeoPixel.h>
 #include <LiquidCrystal.h>
 #include <SPI.h>
+
+void readButtonStates();
+void buttonHandler(int button, int &state, int &prevState, void(*handler)());
+void handleButtonOne();
+void handleButtonTwo();
+void handleButtonThree();
+void handleButtonFour();
+void handleButtonFive();
+void setRGBColor(int red, int green, int blue);
+void setRoomBrightness(int room, int level);
+void lightRooms();
 
 const char NUM_TLC59711=1;
 const char TLC_DATA=12;
@@ -47,7 +60,7 @@ int roomBrightness[] = {brightness * 180, brightness * 180};
 int currentRoom = 0;
 
 // Attic lights are Adafruit NeoPixels!
-   
+
 
 const int ENABLED = 0;
 const int NOT_ENABLED = 1023; // use an explicit value to avoid triggering on floating input
@@ -69,20 +82,20 @@ void setup() {
   lcd.begin(16, 2);
   lcd.print("Doll house");
   lcd.setCursor(0,1);
-  lcd.print("lighting");
-  
+  lcd.print("lighting!");
+
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
   pinMode(BLUE_PIN, OUTPUT);
-  
+
   // initialize the NeoPixel strand
   strip.begin();
   strip.show();
-  
+
   // Initialize the PWM board
   tlc.begin();
   tlc.write();
-  
+
   // Set the default brightness for the rooms
   for (int i = 0; i < sizeof(roomBrightness); i++) {
     setRoomBrightness(i, roomBrightness[i]);
@@ -148,10 +161,10 @@ void handleButtonFive() {
 }
 
 void setRGBColor(int red, int green, int blue) {
-  int myRed = constrain(red, 0, 255); 
-  int myGreen = constrain(green, 0, 255); 
+  int myRed = constrain(red, 0, 255);
+  int myGreen = constrain(green, 0, 255);
   int myBlue = constrain(blue, 0, 255);
-  
+
   analogWrite(RED_PIN, myRed);
   analogWrite(GREEN_PIN, myGreen);
   analogWrite(BLUE_PIN, myBlue);
@@ -160,12 +173,12 @@ void setRGBColor(int red, int green, int blue) {
 void setRoomBrightness(int room, int level) {
   roomBrightness[room] = level;
   tlc.setPWM(room * 3, roomBrightness[room]);
-  tlc.write(); 
+  tlc.write();
 }
 
 void lightRooms() {
   for (int i = 0; i < 6; i++) {
-    
+
   }
 }
 
