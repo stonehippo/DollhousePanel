@@ -191,12 +191,6 @@ void setRoomBrightness(int room, int level) {
   tlc.write();
 }
 
-void lightRooms() {
-  for (int i = 0; i < 6; i++) {
-
-  }
-}
-
 // ***** FSM event handlers ***** //
 
 // ---- lighting mode states ---- //
