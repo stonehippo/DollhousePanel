@@ -6,6 +6,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <LiquidCrystal.h>
 #include <SPI.h>
+#include <Fsm.h>
 
 const char NUM_TLC59711=1;
 const char TLC_DATA=12;
@@ -14,12 +15,15 @@ const char TLC_CLK=13;
 const char PIXEL_COUNT = 3;
 const char PIXEL_PIN = 8;
 
-enum lightingModes {
-  MODE_LIGHTING,
-  MODE_PARTY,
-  MODE_NITELIGHT,
-  MODE_OFF
-};
+// Lighting modes finite state machine
+#define CHANGE_LIGHT_MODE 1
+
+State state_lighting_mode(on_lighting_mode_enter, &on_lighting_mode_exit);
+State state_party_mode(on_party_mode_enter, &on_party_mode_exit);
+State state_nitelite_mode(on_nitelite_mode_enter, &on_nitelite_mode_exit);
+State state_off_mode(on_off_mode_enter, &on_off_mode_exit);
+Fsm modes(&state_off_mode);
+
 
 int currentMode = 0;
 
@@ -30,6 +34,16 @@ enum analogButtons {
   BUTTON_THREE,
   BUTTON_FOUR,
   BUTTON_FIVE
+};
+
+enum Rooms {
+  LIVING_ROOM,
+  HALL,
+  KITCHEN,
+  BEDROOM,
+  BATHROOM,
+  ATTIC,
+  LastROOM
 };
 
 // NeoPixels (for the attic & !!!PARTY MODE!!!)
@@ -47,9 +61,8 @@ const char GREEN_PIN = 10;
 const char BLUE_PIN = 11;
 
 int brightness = 90;
-int roomBrightness[] = {brightness * 180, brightness * 180};
-int numberOfRooms = sizeof(roomBrightness);
-int currentRoom = 0;
+int roomBrightness[LastROOM];
+int currentRoom = LIVING_ROOM;
 
 // Attic lights are Adafruit NeoPixels!
 
@@ -87,6 +100,17 @@ void setup() {
   // Initialize the PWM board
   tlc.begin();
   tlc.write();
+
+  // set defualt room brightness
+  for (int i = 0; i != LastROOM; i++) {
+    roomBrightness[i] = {brightness * 180};
+  }
+
+  modes.add_transition(&state_off_mode, &state_lighting_mode, CHANGE_LIGHT_MODE, NULL);
+  modes.add_transition(&state_lighting_mode, &state_party_mode, CHANGE_LIGHT_MODE, NULL);
+  modes.add_transition(&state_party_mode, &state_nitelite_mode, CHANGE_LIGHT_MODE, NULL);
+  modes.add_transition(&state_nitelite_mode, &state_off_mode, CHANGE_LIGHT_MODE, NULL);
+
 }
 
 void readButtonStates() {
@@ -104,13 +128,13 @@ void buttonHandler(int button, int &state, int &prevState, void(*handler)()) {
     prevState = state;
   } else if (state == NOT_ENABLED && state != prevState) {
     prevState = state;
-    lcd.clear();
+    // lcd.clear();
   }
 }
 
 void handleButtonOne() {
   lcd.clear();
-  lcd.print("modeset!");
+  modes.trigger(CHANGE_LIGHT_MODE);
 }
 
 void handleButtonTwo() {
@@ -126,7 +150,11 @@ void handleButtonTwo() {
 
 void handleButtonThree() {
   lcd.clear();
-  currentRoom = !currentRoom;
+  if (currentRoom == 0) {
+    currentRoom = LastROOM - 1;
+  } else {
+    currentRoom = currentRoom - 1;
+  }
   lcd.print("Prev room");
 }
 
@@ -143,7 +171,11 @@ void handleButtonFour() {
 
 void handleButtonFive() {
   lcd.clear();
-  currentRoom = !currentRoom;
+  if (currentRoom + 1  == LastROOM) {
+    currentRoom = 0;
+  } else {
+    currentRoom = currentRoom + 1;
+  }
   lcd.print("Next room");
 }
 
@@ -168,6 +200,44 @@ void lightRooms() {
 
   }
 }
+
+void on_lighting_mode_enter(){
+  lcd.clear();
+  lcd.print("lighting mode!");
+}
+
+void on_lighting_mode_exit(){
+  
+}
+
+void on_party_mode_enter(){
+  lcd.clear();
+  lcd.print("party mode!");
+}
+
+void on_party_mode_exit(){
+  
+}
+
+void on_nitelite_mode_enter(){
+  lcd.clear();
+  lcd.print("nitelite mode!");  
+}
+
+void on_nitelite_mode_exit(){
+
+}
+
+void on_off_mode_enter(){
+  lcd.clear();
+  lcd.print("off mode!");  
+}
+
+void on_off_mode_exit(){
+
+}
+
+
 
 void loop() {
   setRGBColor(0,0,brightness);
