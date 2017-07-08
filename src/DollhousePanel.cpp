@@ -9,9 +9,9 @@
 #include <Fsm.h>
 #include <EnableInterrupt.h>
 
-const char NUM_TLC59711=1;
-const char TLC_DATA=12;
-const char TLC_CLK=13;
+const char NUM_TLC59711 = 1;
+const char TLC_DATA = 12;
+const char TLC_CLK = 13;
 
 const char PIXEL_COUNT = 3;
 const char PIXEL_PIN = 8;
