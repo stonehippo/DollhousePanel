@@ -110,6 +110,7 @@ void setup() {
   modes.add_transition(&state_nitelite_mode, &state_off_mode, CHANGE_LIGHT_MODE, NULL);
 
   // rooms FSM transitions
+  // looping "forward" through the rooms
   rooms.add_transition(&state_all_rooms, &state_hall, NEXT_ROOM, NULL);
   rooms.add_transition(&state_hall, &state_living_room, NEXT_ROOM, NULL);
   rooms.add_transition(&state_living_room, &state_kitchen, NEXT_ROOM, NULL);
@@ -118,6 +119,7 @@ void setup() {
   rooms.add_transition(&state_bathroom, &state_attic, NEXT_ROOM, NULL);
   rooms.add_transition(&state_attic, &state_all_rooms, NEXT_ROOM, NULL);
 
+  // looping "backward" through the rooms
   rooms.add_transition(&state_all_rooms, &state_attic, PREVIOUS_ROOM, NULL);
   rooms.add_transition(&state_attic, &state_bathroom, PREVIOUS_ROOM, NULL);
   rooms.add_transition(&state_bathroom, &state_bedroom, PREVIOUS_ROOM, NULL);
@@ -126,7 +128,8 @@ void setup() {
   rooms.add_transition(&state_living_room, &state_hall, PREVIOUS_ROOM, NULL);
   rooms.add_transition(&state_hall, &state_all_rooms, PREVIOUS_ROOM, NULL);
 
-    rooms.add_transition(&state_hall, &state_all_rooms, RESET_ROOMS, NULL);
+  // reseting to the default room (all rooms)
+  rooms.add_transition(&state_hall, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_living_room, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_kitchen, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_bedroom, &state_all_rooms, RESET_ROOMS, NULL);
