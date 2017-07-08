@@ -60,6 +60,15 @@ To be honest, I'd have used most of the pins even with a standard Arduino and co
 
 The PWM board helps me address this somewhat. This is a nifty little board with a constant current driver and 16-bit resolution. It's ideal for driving LEDs. Thanks to its twelve channels, I have enough PWM bandwidth to control the light levels in each room of the house independently.
 
+## The State Machines
+
+When I first started builing the panel, I used a lot of flags and arrays to try to manage the state of the panel. This was a stupid way to do things. What I really needed was _Finite State Machines_. I've used them on other projects (like [Sploder](https://github.com/stonehippo/sploder),) but not here. Fortunately, I got smarter and I changed that. I've been trying out [arduino-fsm](https://github.com/jonblack/arduino-fsm), which is a pretty simple FSM library, similar (but not quite as full featured), as [the code I've used in other projects](http://playground.arduino.cc/Code/FiniteStateMachine).
+
+There are a few interacting state machines in the panel, including:
+
+- modes -- used to determine what mode (off, lighting, party, nitelite) the overall dollhouse lighting should use
+- rooms -- determines which room the panel is setting
+
 ----------
 
 \* I acquired the Smartmaker stuff as a backer reward from their less-than-stellar Kickstarter campaign. Except for the components that I have used in this project, I have sold off all of my Smartmaker Open System components.
