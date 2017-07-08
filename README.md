@@ -66,8 +66,8 @@ When I first started builing the panel, I used a lot of flags and arrays to try 
 
 There are a few interacting state machines in the panel, including:
 
-- modes -- used to determine what mode (off, lighting, party, nitelite) the overall dollhouse lighting should use
-- rooms -- determines which room the panel is setting
+- modes — used to determine what mode (off, lighting, party, nitelite) the overall dollhouse lighting should use
+- rooms — determines which room the panel is setting
 
 ----------
 
