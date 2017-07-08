@@ -15,17 +15,28 @@ const char TLC_CLK=13;
 const char PIXEL_COUNT = 3;
 const char PIXEL_PIN = 8;
 
-// Lighting modes finite state machine
-#define CHANGE_LIGHT_MODE 1
+enum events {
+  CHANGE_LIGHT_MODE,
+  NEXT_ROOM,
+  PREVIOUS_ROOM
+};
 
+// Lighting modes finite state machine
 State state_lighting_mode(on_lighting_mode_enter, &on_lighting_mode_exit);
 State state_party_mode(on_party_mode_enter, &on_party_mode_exit);
 State state_nitelite_mode(on_nitelite_mode_enter, &on_nitelite_mode_exit);
 State state_off_mode(on_off_mode_enter, &on_off_mode_exit);
 Fsm modes(&state_off_mode);
 
-
-int currentMode = 0;
+// Rooms finite state machine
+State state_all_rooms(on_all_enter, &on_all_exit);
+State state_hall(on_hall_enter, &on_hall_exit);
+State state_living_room(on_living_room_enter, &on_living_room_exit);
+State state_kitchen(on_kitchen_enter, &on_kitchen_exit);
+State state_bedroom(on_bedroom_enter, &on_bedroom_exit);
+State state_bathroom(on_bathroom_enter, &on_bathroom_exit);
+State state_attic(on_attic_enter, &on_attic_exit);
+Fsm rooms(&state_all_rooms);
 
 // The button interface is a Smartmaker 5A5 (annoying, but it works)
 enum analogButtons {
@@ -106,11 +117,28 @@ void setup() {
     roomBrightness[i] = {brightness * 180};
   }
 
+  // mode FSM transitions
   modes.add_transition(&state_off_mode, &state_lighting_mode, CHANGE_LIGHT_MODE, NULL);
   modes.add_transition(&state_lighting_mode, &state_party_mode, CHANGE_LIGHT_MODE, NULL);
   modes.add_transition(&state_party_mode, &state_nitelite_mode, CHANGE_LIGHT_MODE, NULL);
   modes.add_transition(&state_nitelite_mode, &state_off_mode, CHANGE_LIGHT_MODE, NULL);
 
+  // rooms FSM transitions
+  rooms.add_transition(&state_all_rooms, &state_hall, NEXT_ROOM, NULL);
+  rooms.add_transition(&state_hall, &state_living_room, NEXT_ROOM, NULL);
+  rooms.add_transition(&state_living_room, &state_kitchen, NEXT_ROOM, NULL);
+  rooms.add_transition(&state_kitchen, &state_bedroom, NEXT_ROOM, NULL);
+  rooms.add_transition(&state_bedroom, &state_bathroom, NEXT_ROOM, NULL);
+  rooms.add_transition(&state_bathroom, &state_attic, NEXT_ROOM, NULL);
+  rooms.add_transition(&state_attic, &state_all_rooms, NEXT_ROOM, NULL);
+
+  rooms.add_transition(&state_all_rooms, &state_attic, PREVIOUS_ROOM, NULL);
+  rooms.add_transition(&state_attic, &state_bathroom, PREVIOUS_ROOM, NULL);
+  rooms.add_transition(&state_bathroom, &state_bedroom, PREVIOUS_ROOM, NULL);
+  rooms.add_transition(&state_bedroom, &state_kitchen, PREVIOUS_ROOM, NULL);
+  rooms.add_transition(&state_kitchen, &state_living_room, PREVIOUS_ROOM, NULL);
+  rooms.add_transition(&state_living_room, &state_hall, PREVIOUS_ROOM, NULL);
+  rooms.add_transition(&state_hall, &state_all_rooms, PREVIOUS_ROOM, NULL);
 }
 
 void readButtonStates() {
@@ -150,12 +178,7 @@ void handleButtonTwo() {
 
 void handleButtonThree() {
   lcd.clear();
-  if (currentRoom == 0) {
-    currentRoom = LastROOM - 1;
-  } else {
-    currentRoom = currentRoom - 1;
-  }
-  lcd.print("Prev room");
+  rooms.trigger(PREVIOUS_ROOM);
 }
 
 void handleButtonFour() {
@@ -171,12 +194,7 @@ void handleButtonFour() {
 
 void handleButtonFive() {
   lcd.clear();
-  if (currentRoom + 1  == LastROOM) {
-    currentRoom = 0;
-  } else {
-    currentRoom = currentRoom + 1;
-  }
-  lcd.print("Next room");
+  rooms.trigger(NEXT_ROOM);
 }
 
 void setRGBColor(int red, int green, int blue) {
@@ -200,6 +218,10 @@ void lightRooms() {
 
   }
 }
+
+// ***** FSM event handlers ***** //
+
+// ---- lighting mode states ---- //
 
 void on_lighting_mode_enter(){
   lcd.clear();
@@ -237,7 +259,69 @@ void on_off_mode_exit(){
 
 }
 
+// ---- room selection states ---- //
+void on_all_enter() {
+  lcd.clear();
+  lcd.print("Setting all rooms");
+}
 
+void on_all_exit() {
+  
+}
+
+void on_hall_enter() {
+  lcd.clear();
+  lcd.print("Setting hall");
+}
+
+void on_hall_exit() {
+  
+}
+
+void on_living_room_enter() {
+  lcd.clear();
+  lcd.print("Setting living room");
+}
+
+void on_living_room_exit() {
+  
+}
+
+void on_kitchen_enter() {
+  lcd.clear();
+  lcd.print("Setting kitchen");
+}
+
+void on_kitchen_exit() {
+  
+}
+
+void on_bathroom_enter() {
+  lcd.clear();
+  lcd.print("Setting bathroom");
+}
+
+void on_bathroom_exit() {
+  
+}
+
+void on_bedroom_enter() {
+  lcd.clear();
+  lcd.print("Setting bedroom");
+}
+
+void on_bedroom_exit() {
+  
+}
+
+void on_attic_enter() {
+  lcd.clear();
+  lcd.print("Setting attic");
+}
+
+void on_attic_exit() {
+  
+}
 
 void loop() {
   setRGBColor(0,0,brightness);
