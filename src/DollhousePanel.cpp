@@ -40,15 +40,6 @@ State state_bathroom(on_bathroom_enter, &on_bathroom_exit);
 State state_attic(on_attic_enter, &on_attic_exit);
 Fsm rooms(&state_all_rooms);
 
-// The button interface is a Smartmaker 5A5 (annoying, but it works)
-enum analogButtons {
-  BUTTON_ONE,
-  BUTTON_TWO,
-  BUTTON_THREE,
-  BUTTON_FOUR,
-  BUTTON_FIVE
-};
-
 // LastROOM is included to make it easier to figure out the size of the enum
 // for things like sizing the brightness state array
 enum Rooms {
@@ -105,6 +96,7 @@ void setup() {
   }
 
   // enable interrupts on buttons
+  // The button interface is a Smartmaker 5A5 (annoying, but it works)
   enableInterrupt(A0, handleButtonOne, FALLING);
   enableInterrupt(A1, handleButtonTwo, FALLING);
   enableInterrupt(A2, handleButtonThree, FALLING);
