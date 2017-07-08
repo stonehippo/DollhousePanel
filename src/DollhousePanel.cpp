@@ -18,7 +18,8 @@ const char PIXEL_PIN = 8;
 enum events {
   CHANGE_LIGHT_MODE,
   NEXT_ROOM,
-  PREVIOUS_ROOM
+  PREVIOUS_ROOM,
+  RESET_ROOMS
 };
 
 // Lighting modes finite state machine
@@ -139,6 +140,13 @@ void setup() {
   rooms.add_transition(&state_kitchen, &state_living_room, PREVIOUS_ROOM, NULL);
   rooms.add_transition(&state_living_room, &state_hall, PREVIOUS_ROOM, NULL);
   rooms.add_transition(&state_hall, &state_all_rooms, PREVIOUS_ROOM, NULL);
+
+    rooms.add_transition(&state_hall, &state_all_rooms, RESET_ROOMS, NULL);
+  rooms.add_transition(&state_living_room, &state_all_rooms, RESET_ROOMS, NULL);
+  rooms.add_transition(&state_kitchen, &state_all_rooms, RESET_ROOMS, NULL);
+  rooms.add_transition(&state_bedroom, &state_all_rooms, RESET_ROOMS, NULL);
+  rooms.add_transition(&state_bathroom, &state_all_rooms, RESET_ROOMS, NULL);
+  rooms.add_transition(&state_attic, &state_all_rooms, RESET_ROOMS, NULL);
 }
 
 void readButtonStates() {
@@ -162,6 +170,7 @@ void buttonHandler(int button, int &state, int &prevState, void(*handler)()) {
 
 void handleButtonOne() {
   lcd.clear();
+  rooms.trigger(RESET_ROOMS);
   modes.trigger(CHANGE_LIGHT_MODE);
 }
 
