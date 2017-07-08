@@ -1,5 +1,5 @@
-void readButtonStates();
-void buttonHandler(int button, int &state, int &prevState, void(*handler)());
+// void readButtonStates();
+// void buttonHandler(int button, int &state, int &prevState, void(*handler)());
 void handleButtonOne();
 void handleButtonTwo();
 void handleButtonThree();

@@ -7,6 +7,7 @@
 #include <LiquidCrystal.h>
 #include <SPI.h>
 #include <Fsm.h>
+#include <EnableInterrupt.h>
 
 const char NUM_TLC59711=1;
 const char TLC_DATA=12;
@@ -49,6 +50,7 @@ enum analogButtons {
 };
 
 enum Rooms {
+  ALL_ROOMS,
   LIVING_ROOM,
   HALL,
   KITCHEN,
@@ -74,25 +76,25 @@ const char BLUE_PIN = 11;
 
 int brightness = 90;
 int roomBrightness[LastROOM];
-int currentRoom = LIVING_ROOM;
+int currentRoom = ALL_ROOMS;
 
 // Attic lights are Adafruit NeoPixels!
 
 
-const int ENABLED = 0;
-const int NOT_ENABLED = 1023; // use an explicit value to avoid triggering on floating input
+// const int ENABLED = 0;
+// const int NOT_ENABLED = 1023; // use an explicit value to avoid triggering on floating input
 
-int buttonOneState = 1023;
-int buttonTwoState = 1023;
-int buttonThreeState = 1023;
-int buttonFourState = 1023;
-int buttonFiveState = 1023;
+// int buttonOneState = 1023;
+// int buttonTwoState = 1023;
+// int buttonThreeState = 1023;
+// int buttonFourState = 1023;
+// int buttonFiveState = 1023;
 
-int buttonOnePrevState = 1023;
-int buttonTwoPrevState = 1023;
-int buttonThreePrevState = 1023;
-int buttonFourPrevState = 1023;
-int buttonFivePrevState = 1023;
+// int buttonOnePrevState = 1023;
+// int buttonTwoPrevState = 1023;
+// int buttonThreePrevState = 1023;
+// int buttonFourPrevState = 1023;
+// int buttonFivePrevState = 1023;
 
 void setup() {
   // Fire up the LCD display
@@ -117,6 +119,13 @@ void setup() {
   for (int i = 0; i != LastROOM; i++) {
     roomBrightness[i] = {brightness * 180};
   }
+
+  // enable interrupts on buttons
+  enableInterrupt(A0, handleButtonOne, FALLING);
+  enableInterrupt(A1, handleButtonTwo, FALLING);
+  enableInterrupt(A2, handleButtonThree, FALLING);
+  enableInterrupt(A3, handleButtonFour, FALLING);
+  enableInterrupt(A4, handleButtonFive, FALLING);
 
   // mode FSM transitions
   modes.add_transition(&state_off_mode, &state_lighting_mode, CHANGE_LIGHT_MODE, NULL);
@@ -149,24 +158,24 @@ void setup() {
   rooms.add_transition(&state_attic, &state_all_rooms, RESET_ROOMS, NULL);
 }
 
-void readButtonStates() {
-  buttonOneState = analogRead(BUTTON_ONE);
-  buttonTwoState = analogRead(BUTTON_TWO);
-  buttonThreeState = analogRead(BUTTON_THREE);
-  buttonFourState = analogRead(BUTTON_FOUR);
-  buttonFiveState = analogRead(BUTTON_FIVE);
-  delay(100);
-}
+// void readButtonStates() {
+//   buttonOneState = analogRead(BUTTON_ONE);
+//   buttonTwoState = analogRead(BUTTON_TWO);
+//   buttonThreeState = analogRead(BUTTON_THREE);
+//   buttonFourState = analogRead(BUTTON_FOUR);
+//   buttonFiveState = analogRead(BUTTON_FIVE);
+//   delay(100);
+// }
 
-void buttonHandler(int button, int &state, int &prevState, void(*handler)()) {
-  if (state == ENABLED && state != prevState) {
-    (*handler)();
-    prevState = state;
-  } else if (state == NOT_ENABLED && state != prevState) {
-    prevState = state;
-    // lcd.clear();
-  }
-}
+// void buttonHandler(int button, int &state, int &prevState, void(*handler)()) {
+//   if (state == ENABLED && state != prevState) {
+//     (*handler)();
+//     prevState = state;
+//   } else if (state == NOT_ENABLED && state != prevState) {
+//     prevState = state;
+//     // lcd.clear();
+//   }
+// }
 
 void handleButtonOne() {
   lcd.clear();
@@ -271,7 +280,9 @@ void on_off_mode_exit(){
 // ---- room selection states ---- //
 void on_all_enter() {
   lcd.clear();
-  lcd.print("Setting all rooms");
+  currentRoom = ALL_ROOMS;
+  lcd.print("all, B:");
+  lcd.print(roomBrightness[currentRoom]);
 }
 
 void on_all_exit() {
@@ -280,6 +291,7 @@ void on_all_exit() {
 
 void on_hall_enter() {
   lcd.clear();
+  currentRoom = HALL;
   lcd.print("Setting hall");
 }
 
@@ -289,6 +301,7 @@ void on_hall_exit() {
 
 void on_living_room_enter() {
   lcd.clear();
+  currentRoom = LIVING_ROOM;
   lcd.print("Setting living room");
 }
 
@@ -298,6 +311,7 @@ void on_living_room_exit() {
 
 void on_kitchen_enter() {
   lcd.clear();
+  currentRoom = KITCHEN;
   lcd.print("Setting kitchen");
 }
 
@@ -307,6 +321,7 @@ void on_kitchen_exit() {
 
 void on_bathroom_enter() {
   lcd.clear();
+  currentRoom = BATHROOM;
   lcd.print("Setting bathroom");
 }
 
@@ -316,6 +331,7 @@ void on_bathroom_exit() {
 
 void on_bedroom_enter() {
   lcd.clear();
+  currentRoom = BEDROOM;
   lcd.print("Setting bedroom");
 }
 
@@ -325,6 +341,7 @@ void on_bedroom_exit() {
 
 void on_attic_enter() {
   lcd.clear();
+  currentRoom = ATTIC;
   lcd.print("Setting attic");
 }
 
@@ -334,10 +351,10 @@ void on_attic_exit() {
 
 void loop() {
   setRGBColor(0,0,brightness);
-  readButtonStates();
-  buttonHandler(BUTTON_ONE, buttonOneState, buttonOnePrevState, handleButtonOne);
-  buttonHandler(BUTTON_TWO,buttonTwoState, buttonTwoPrevState, handleButtonTwo);
-  buttonHandler(BUTTON_THREE, buttonThreeState, buttonThreePrevState, handleButtonThree);
-  buttonHandler(BUTTON_FOUR, buttonFourState, buttonFourPrevState, handleButtonFour);
-  buttonHandler(BUTTON_FIVE, buttonFiveState, buttonFivePrevState, handleButtonFive);
+  // readButtonStates();
+  // buttonHandler(BUTTON_ONE, buttonOneState, buttonOnePrevState, handleButtonOne);
+  // buttonHandler(BUTTON_TWO,buttonTwoState, buttonTwoPrevState, handleButtonTwo);
+  // buttonHandler(BUTTON_THREE, buttonThreeState, buttonThreePrevState, handleButtonThree);
+  // buttonHandler(BUTTON_FOUR, buttonFourState, buttonFourPrevState, handleButtonFour);
+  // buttonHandler(BUTTON_FIVE, buttonFiveState, buttonFivePrevState, handleButtonFive);
 }
