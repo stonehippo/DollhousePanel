@@ -30,6 +30,15 @@ State state_nitelite_mode(on_nitelite_mode_enter, &on_nitelite_mode_exit);
 State state_off_mode(on_off_mode_enter, &on_off_mode_exit);
 Fsm modes(&state_off_mode);
 
+enum Modes {
+  LIGHTING_MODE,
+  PARTY_MODE,
+  NITELITE_MODE,
+  OFF_MODE
+};
+
+String modeNames[] = {"Lighting", "Party", "Nitelite", "Off"};
+
 // Rooms finite state machine
 State state_all_rooms(on_all_enter, &on_all_exit);
 State state_hall(on_hall_enter, &on_hall_exit);
@@ -53,6 +62,8 @@ enum Rooms {
   LastROOM
 };
 
+String roomNames[] = {"All", "Living", "Hall", "Kitchen", "Bedroom", "Bathroom", "Attic"};
+
 // NeoPixels (for the attic & !!!PARTY MODE!!!)
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -68,8 +79,12 @@ const char GREEN_PIN = 10;
 const char BLUE_PIN = 11;
 
 int brightness = 90;
+int deltaLevel = 30;
+int minLevel = 0;
+int maxLevel = 180;
 int roomBrightness[LastROOM];
 int currentRoom = ALL_ROOMS;
+int currentMode = OFF_MODE;
 
 void setup() {
   // Fire up the LCD display
@@ -91,9 +106,7 @@ void setup() {
   tlc.write();
 
   // set defualt room brightness
-  for (int i = 0; i != LastROOM; i++) {
-    roomBrightness[i] = {brightness * 180};
-  }
+  setDefaultLightLevel();
 
   // enable interrupts on buttons
   // The button interface is a Smartmaker 5A5 (annoying, but it works)
@@ -137,6 +150,7 @@ void setup() {
   rooms.add_transition(&state_attic, &state_all_rooms, RESET_ROOMS, NULL);
 }
 
+// ***** Button event handlers ***** //
 void handleButtonOne() {
   lcd.clear();
   rooms.trigger(RESET_ROOMS);
@@ -144,14 +158,9 @@ void handleButtonOne() {
 }
 
 void handleButtonTwo() {
-  lcd.clear();
-  lcd.print("Brightness++");
-  lcd.setCursor(0,1);
-  brightness = min(brightness + 30, 180);
-  lcd.print(brightness);
-  setRGBColor(0,0,brightness);
-  setRoomBrightness(currentRoom,brightness * 180);
-  delay(200);
+  setRoomBrightness(currentRoom, min(roomBrightness[currentRoom] + deltaLevel, maxLevel));
+  printCurrentRoom();
+  delay(50);
 }
 
 void handleButtonThree() {
@@ -160,20 +169,17 @@ void handleButtonThree() {
 }
 
 void handleButtonFour() {
-  lcd.clear();
-  lcd.print("Brightness--");
-  lcd.setCursor(0,1);
-  brightness = max(brightness - 30, 0);
-  lcd.print(brightness);
-  setRGBColor(0,0,brightness);
-  setRoomBrightness(currentRoom,brightness * 180);
-  delay(200);
+  setRoomBrightness(currentRoom, max(roomBrightness[currentRoom] - deltaLevel, minLevel));
+  printCurrentRoom();
+  delay(50);
 }
 
 void handleButtonFive() {
   lcd.clear();
   rooms.trigger(NEXT_ROOM);
 }
+
+// ***** helpers ***** //
 
 void setRGBColor(int red, int green, int blue) {
   int myRed = constrain(red, 0, 255);
@@ -186,9 +192,43 @@ void setRGBColor(int red, int green, int blue) {
 }
 
 void setRoomBrightness(int room, int level) {
+  setRGBColor(0,0,level);
   roomBrightness[room] = level;
-  tlc.setPWM(room * 3, roomBrightness[room]);
+  tlc.setPWM(room * 3, roomBrightness[room] * maxLevel);
   tlc.write();
+}
+
+void setDefaultLightLevel() {
+  setRGBColor(0,0,brightness);
+  for (int i = 0; i != LastROOM; i++) {
+    roomBrightness[i] = brightness;
+  }
+}
+
+void setCurrentMode(int mode) {
+  currentMode = mode;
+  printCurrentMode();
+}
+
+void printCurrentMode() {
+  lcd.clear();
+  lcd.print("Mode: ");
+  lcd.print(modeNames[currentMode]);
+}
+
+void setCurrentRoom(int room) {
+  currentRoom = room;
+  setRGBColor(0,0,roomBrightness[room]);
+  printCurrentRoom();
+}
+
+void printCurrentRoom() {
+  lcd.clear();
+  lcd.print("room: ");
+  lcd.print(roomNames[currentRoom]);
+  lcd.setCursor(0,1);
+  lcd.print("brightness: ");
+  lcd.print(roomBrightness[currentRoom]);
 }
 
 // ***** FSM event handlers ***** //
@@ -196,8 +236,7 @@ void setRoomBrightness(int room, int level) {
 // ---- lighting mode states ---- //
 
 void on_lighting_mode_enter(){
-  lcd.clear();
-  lcd.print("lighting mode!");
+  setCurrentMode(LIGHTING_MODE);
 }
 
 void on_lighting_mode_exit(){
@@ -205,8 +244,7 @@ void on_lighting_mode_exit(){
 }
 
 void on_party_mode_enter(){
-  lcd.clear();
-  lcd.print("party mode!");
+  setCurrentMode(PARTY_MODE);
 }
 
 void on_party_mode_exit(){
@@ -214,8 +252,7 @@ void on_party_mode_exit(){
 }
 
 void on_nitelite_mode_enter(){
-  lcd.clear();
-  lcd.print("nitelite mode!");  
+  setCurrentMode(NITELITE_MODE);  
 }
 
 void on_nitelite_mode_exit(){
@@ -223,8 +260,7 @@ void on_nitelite_mode_exit(){
 }
 
 void on_off_mode_enter(){
-  lcd.clear();
-  lcd.print("off mode!");  
+  setCurrentMode(OFF_MODE);  
 }
 
 void on_off_mode_exit(){
@@ -233,10 +269,7 @@ void on_off_mode_exit(){
 
 // ---- room selection states ---- //
 void on_all_enter() {
-  lcd.clear();
-  currentRoom = ALL_ROOMS;
-  lcd.print("all, B:");
-  lcd.print(roomBrightness[currentRoom]);
+  setCurrentRoom(ALL_ROOMS);
 }
 
 void on_all_exit() {
@@ -244,9 +277,7 @@ void on_all_exit() {
 }
 
 void on_hall_enter() {
-  lcd.clear();
-  currentRoom = HALL;
-  lcd.print("Setting hall");
+  setCurrentRoom(HALL);
 }
 
 void on_hall_exit() {
@@ -254,9 +285,7 @@ void on_hall_exit() {
 }
 
 void on_living_room_enter() {
-  lcd.clear();
-  currentRoom = LIVING_ROOM;
-  lcd.print("Setting living room");
+  setCurrentRoom(LIVING_ROOM);
 }
 
 void on_living_room_exit() {
@@ -264,9 +293,7 @@ void on_living_room_exit() {
 }
 
 void on_kitchen_enter() {
-  lcd.clear();
-  currentRoom = KITCHEN;
-  lcd.print("Setting kitchen");
+  setCurrentRoom(KITCHEN);
 }
 
 void on_kitchen_exit() {
@@ -274,9 +301,7 @@ void on_kitchen_exit() {
 }
 
 void on_bathroom_enter() {
-  lcd.clear();
-  currentRoom = BATHROOM;
-  lcd.print("Setting bathroom");
+  setCurrentRoom(BATHROOM);
 }
 
 void on_bathroom_exit() {
@@ -284,9 +309,7 @@ void on_bathroom_exit() {
 }
 
 void on_bedroom_enter() {
-  lcd.clear();
-  currentRoom = BEDROOM;
-  lcd.print("Setting bedroom");
+  setCurrentRoom(BEDROOM);
 }
 
 void on_bedroom_exit() {
@@ -294,9 +317,7 @@ void on_bedroom_exit() {
 }
 
 void on_attic_enter() {
-  lcd.clear();
-  currentRoom = ATTIC;
-  lcd.print("Setting attic");
+  setCurrentRoom(ATTIC);
 }
 
 void on_attic_exit() {
@@ -304,5 +325,5 @@ void on_attic_exit() {
 }
 
 void loop() {
-  setRGBColor(0,0,brightness);
+  // do nothing; everything is handled via FSM events  
 }

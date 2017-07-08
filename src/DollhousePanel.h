@@ -7,6 +7,13 @@ void setRGBColor(int red, int green, int blue);
 void setRoomBrightness(int room, int level);
 void lightRooms();
 
+void setDefaultLightLevel();
+
+void printCurrentMode();
+void setCurrentMode(int mode);
+void printCurrentRoom();
+void setCurrentRoom(int room);
+
 // ***** FSM event handlers ***** 
 
 // ---- lighting mode states ---- 
