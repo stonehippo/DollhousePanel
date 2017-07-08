@@ -69,6 +69,27 @@ There are a few interacting state machines in the panel, including:
 - modes — used to determine what mode (off, lighting, party, nitelite) the overall dollhouse lighting should use
 - rooms — determines which room the panel is setting
 
+## Pin Change Interrupts make life better
+
+One of the bummers of working with the Smarmaker components is the rather crappy 5 analog button board. This is a silly design: 5 momentary switches on one breakout (so far, so good…), each of which is attached to a different analog pin on the Arduino (Wait, WTF?!). This is an (at least) triply dumb design:
+
+- It uses up most of the `analogRead()` capable pins
+- Why the heck would you want to read the analog values on a momentary switch?! It's freaking push button!
+- To the first two issues: if you're going to hook up buttons to an ADC, why not multiplex them using a single pin and something like a set of resistors at varying values so you can distingish individuals pushes?
+
+*Sigh.*
+
+Anyhow, it turns out I was making this dumb design even worse in my firmware. In earlier implementations of the dollhouse panel, I was reading the analog values from the buttons via polling at a rate of about 10Hz. This was dumb for at least a couple of reasons:
+
+- It meant I had to have logic to compare the button's current state with thresholds for "on" and "off" (basically, something like `analogRead() == 0` or `analogRead() == 1023`)
+- polling for sensor events *always* sucks; it's just not responsive to things like user input
+
+This situation is the worst of all possible worlds for input, since the system isn't responsive to all of the button presses, and there's a lot of weird code to try to figure out if the press even happened. Fortunately, there's a better way: Pin Change Interrupts.
+
+On the Atmel ATMega at the core of an Arduino, there are a few interrupt types. The Arduino framework has support for external interrupts, which let you capture event input cleanly. Unfortunately, there are only two INTs and they're attached to pins 2 and 3. But there's also pin change interrupts, or PCINTs. Any of the pins on the Uno, and several of the pins on it's Atmel AVR-based siblings like the Mega, can be used with PCINTs, meaning there's a cleaner way to interrupt-driven events from the stupid 5A5 button setup.
+
+I won't go into the particulars of PCINT usage here (ports, determining rising/falling states, etc.). Instead, I recommend taking a look at [EnableInterrupts](https://github.com/GreyGnome/EnableInterrupt), a handy lib that provides an abstraction layer for INTs and PCINTs.
+
 ----------
 
 \* I acquired the Smartmaker stuff as a backer reward from their less-than-stellar Kickstarter campaign. Except for the components that I have used in this project, I have sold off all of my Smartmaker Open System components.

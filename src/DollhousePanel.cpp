@@ -78,24 +78,6 @@ int brightness = 90;
 int roomBrightness[LastROOM];
 int currentRoom = ALL_ROOMS;
 
-// Attic lights are Adafruit NeoPixels!
-
-
-// const int ENABLED = 0;
-// const int NOT_ENABLED = 1023; // use an explicit value to avoid triggering on floating input
-
-// int buttonOneState = 1023;
-// int buttonTwoState = 1023;
-// int buttonThreeState = 1023;
-// int buttonFourState = 1023;
-// int buttonFiveState = 1023;
-
-// int buttonOnePrevState = 1023;
-// int buttonTwoPrevState = 1023;
-// int buttonThreePrevState = 1023;
-// int buttonFourPrevState = 1023;
-// int buttonFivePrevState = 1023;
-
 void setup() {
   // Fire up the LCD display
   lcd.begin(16, 2);
@@ -157,25 +139,6 @@ void setup() {
   rooms.add_transition(&state_bathroom, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_attic, &state_all_rooms, RESET_ROOMS, NULL);
 }
-
-// void readButtonStates() {
-//   buttonOneState = analogRead(BUTTON_ONE);
-//   buttonTwoState = analogRead(BUTTON_TWO);
-//   buttonThreeState = analogRead(BUTTON_THREE);
-//   buttonFourState = analogRead(BUTTON_FOUR);
-//   buttonFiveState = analogRead(BUTTON_FIVE);
-//   delay(100);
-// }
-
-// void buttonHandler(int button, int &state, int &prevState, void(*handler)()) {
-//   if (state == ENABLED && state != prevState) {
-//     (*handler)();
-//     prevState = state;
-//   } else if (state == NOT_ENABLED && state != prevState) {
-//     prevState = state;
-//     // lcd.clear();
-//   }
-// }
 
 void handleButtonOne() {
   lcd.clear();
@@ -351,10 +314,4 @@ void on_attic_exit() {
 
 void loop() {
   setRGBColor(0,0,brightness);
-  // readButtonStates();
-  // buttonHandler(BUTTON_ONE, buttonOneState, buttonOnePrevState, handleButtonOne);
-  // buttonHandler(BUTTON_TWO,buttonTwoState, buttonTwoPrevState, handleButtonTwo);
-  // buttonHandler(BUTTON_THREE, buttonThreeState, buttonThreePrevState, handleButtonThree);
-  // buttonHandler(BUTTON_FOUR, buttonFourState, buttonFourPrevState, handleButtonFour);
-  // buttonHandler(BUTTON_FIVE, buttonFiveState, buttonFivePrevState, handleButtonFive);
 }
