@@ -48,6 +48,7 @@ const char BLUE_PIN = 11;
 
 int brightness = 90;
 int roomBrightness[] = {brightness * 180, brightness * 180};
+int numberOfRooms = sizeof(roomBrightness);
 int currentRoom = 0;
 
 // Attic lights are Adafruit NeoPixels!
@@ -86,11 +87,6 @@ void setup() {
   // Initialize the PWM board
   tlc.begin();
   tlc.write();
-
-  // Set the default brightness for the rooms
-  for (int i = 0; i < sizeof(roomBrightness); i++) {
-    setRoomBrightness(i, roomBrightness[i]);
-  }
 }
 
 void readButtonStates() {
