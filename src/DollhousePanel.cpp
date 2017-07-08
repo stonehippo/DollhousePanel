@@ -49,6 +49,8 @@ enum analogButtons {
   BUTTON_FIVE
 };
 
+// LastROOM is included to make it easier to figure out the size of the enum
+// for things like sizing the brightness state array
 enum Rooms {
   ALL_ROOMS,
   LIVING_ROOM,
