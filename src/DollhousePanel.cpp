@@ -86,6 +86,8 @@ int roomBrightness[LastROOM];
 int currentRoom = ALL_ROOMS;
 int currentMode = OFF_MODE;
 
+int debounceDelay = 100;
+
 void setup() {
   // Fire up the LCD display
   lcd.begin(16, 2);
@@ -155,28 +157,31 @@ void handleButtonOne() {
   lcd.clear();
   rooms.trigger(RESET_ROOMS);
   modes.trigger(CHANGE_LIGHT_MODE);
+  delay(debounceDelay);
 }
 
 void handleButtonTwo() {
   setRoomBrightness(currentRoom, min(roomBrightness[currentRoom] + deltaLevel, maxLevel));
   printCurrentRoom();
-  delay(50);
+  delay(debounceDelay);
 }
 
 void handleButtonThree() {
   lcd.clear();
   rooms.trigger(PREVIOUS_ROOM);
+  delay(debounceDelay);
 }
 
 void handleButtonFour() {
   setRoomBrightness(currentRoom, max(roomBrightness[currentRoom] - deltaLevel, minLevel));
   printCurrentRoom();
-  delay(50);
+  delay(debounceDelay);
 }
 
 void handleButtonFive() {
   lcd.clear();
   rooms.trigger(NEXT_ROOM);
+  delay(debounceDelay);
 }
 
 // ***** helpers ***** //
