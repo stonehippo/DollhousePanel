@@ -60,6 +60,12 @@ To be honest, I'd have used most of the pins even with a standard Arduino and co
 
 The PWM board helps me address this somewhat. This is a nifty little board with a constant current driver and 16-bit resolution. It's ideal for driving LEDs. Thanks to its twelve channels, I have enough PWM bandwidth to control the light levels in each room of the house independently.
 
+Here's what the whole thing looks like, mashed together sans case:
+
+![The Dollhouse Control Panel aka The Monstrosity](docs/monstrosity.jpg)
+
+Ugly, isn't it?
+
 ## The State Machines
 
 When I first started builing the panel, I used a lot of flags and arrays to try to manage the state of the panel. This was a stupid way to do things. What I really needed was _Finite State Machines_. I've used them on other projects (like [Sploder](https://github.com/stonehippo/sploder),) but not here. Fortunately, I got smarter and I changed that. I've been trying out [arduino-fsm](https://github.com/jonblack/arduino-fsm), which is a pretty simple FSM library, similar (but not quite as full featured), as [the code I've used in other projects](http://playground.arduino.cc/Code/FiniteStateMachine).
