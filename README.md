@@ -77,10 +77,10 @@ There are a few interacting state machines in the panel, including:
 
 ## Pin Change Interrupts make life better
 
-One of the bummers of working with the Smarmaker components is the rather crappy 5 analog button board. This is a silly design: 5 momentary switches on one breakout (so far, so good…), each of which is attached to a different analog pin on the Arduino (Wait, WTF?!). This is an (at least) triply dumb design:
+One of the bummers of working with the Smartmaker components is the rather crappy 5 analog button board. This is a silly design: 5 momentary switches on one breakout (so far, so good…), each of which is attached to a different analog pin on the Arduino (Wait, WTF?!). This is an (at least) triply dumb design:
 
 - It uses up most of the `analogRead()` capable pins
-- Why the heck would you want to read the analog values on a momentary switch?! It's freaking push button!
+- Why the heck would you want to read the analog values on a momentary switch?! It's a freaking push button!
 - To the first two issues: if you're going to hook up buttons to an ADC, why not multiplex them using a single pin and something like a set of resistors at varying values so you can distingish individuals pushes?
 
 *Sigh.*
