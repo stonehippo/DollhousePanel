@@ -68,7 +68,7 @@ Ugly, isn't it?
 
 ## The State Machines
 
-When I first started builing the panel, I used a lot of flags and arrays to try to manage the state of the panel. This was a stupid way to do things. What I really needed was _Finite State Machines_. I've used them on other projects (like [Sploder](https://github.com/stonehippo/sploder),) but not here. Fortunately, I got smarter and I changed that. I've been trying out [arduino-fsm](https://github.com/jonblack/arduino-fsm), which is a pretty simple FSM library, similar (but not quite as full featured), as [the code I've used in other projects](http://playground.arduino.cc/Code/FiniteStateMachine).
+When I first started building the panel, I used a lot of flags and arrays to try to manage the state of the panel. This was a stupid way to do things. What I really needed was _Finite State Machines_. I've used them on other projects (like [Sploder](https://github.com/stonehippo/sploder),) but not here. Fortunately, I got smarter and I changed that. I've been trying out [arduino-fsm](https://github.com/jonblack/arduino-fsm), which is a pretty simple FSM library, similar (but not quite as full featured), as [the code I've used in other projects](http://playground.arduino.cc/Code/FiniteStateMachine).
 
 There are a few interacting state machines in the panel, including:
 
