@@ -24,10 +24,10 @@ enum events {
 };
 
 // Lighting modes finite state machine
-State state_lighting_mode(on_lighting_mode_enter, &on_lighting_mode_exit);
-State state_party_mode(on_party_mode_enter, &on_party_mode_exit);
-State state_nitelite_mode(on_nitelite_mode_enter, &on_nitelite_mode_exit);
-State state_off_mode(on_off_mode_enter, &on_off_mode_exit);
+State state_lighting_mode(on_lighting_mode_enter, NULL, &on_lighting_mode_exit);
+State state_party_mode(on_party_mode_enter, NULL, &on_party_mode_exit);
+State state_nitelite_mode(on_nitelite_mode_enter, NULL, &on_nitelite_mode_exit);
+State state_off_mode(on_off_mode_enter, NULL, &on_off_mode_exit);
 Fsm modes(&state_off_mode);
 
 enum Modes {
@@ -40,13 +40,13 @@ enum Modes {
 String modeNames[] = {"Lighting", "Party", "Nitelite", "Off"};
 
 // Rooms finite state machine
-State state_all_rooms(on_all_enter, &on_all_exit);
-State state_hall(on_hall_enter, &on_hall_exit);
-State state_living_room(on_living_room_enter, &on_living_room_exit);
-State state_kitchen(on_kitchen_enter, &on_kitchen_exit);
-State state_bedroom(on_bedroom_enter, &on_bedroom_exit);
-State state_bathroom(on_bathroom_enter, &on_bathroom_exit);
-State state_attic(on_attic_enter, &on_attic_exit);
+State state_all_rooms(on_all_enter, NULL, &on_all_exit);
+State state_hall(on_hall_enter, NULL, &on_hall_exit);
+State state_living_room(on_living_room_enter, NULL, &on_living_room_exit);
+State state_kitchen(on_kitchen_enter, NULL, &on_kitchen_exit);
+State state_bedroom(on_bedroom_enter, NULL, &on_bedroom_exit);
+State state_bathroom(on_bathroom_enter, NULL, &on_bathroom_exit);
+State state_attic(on_attic_enter, NULL, &on_attic_exit);
 Fsm rooms(&state_all_rooms);
 
 // LastROOM is included to make it easier to figure out the size of the enum
@@ -330,5 +330,7 @@ void on_attic_exit() {
 }
 
 void loop() {
-  // do nothing; everything is handled via FSM events  
+  // do nothing; everything is handled via FSM events.
+  // We also don't need to call the ".run_machine" methods of
+  // the FSMs as there are no "on_state" handlers or timed transitions
 }
