@@ -143,7 +143,7 @@ void setup() {
   rooms.add_transition(&state_living_room, &state_hall, PREVIOUS_ROOM, NULL);
   rooms.add_transition(&state_hall, &state_all_rooms, PREVIOUS_ROOM, NULL);
 
-  // reseting to the default room (all rooms)
+  // resetting to the default room (all rooms)
   rooms.add_transition(&state_hall, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_living_room, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_kitchen, &state_all_rooms, RESET_ROOMS, NULL);
@@ -153,6 +153,8 @@ void setup() {
 }
 
 // ***** Button event handlers ***** //
+
+// Use button one to set the light mode for all rooms
 void handleButtonOne() {
   lcd.clear();
   rooms.trigger(RESET_ROOMS);
@@ -160,24 +162,28 @@ void handleButtonOne() {
   delay(debounceDelay);
 }
 
+// Use button two to increase brightness for the current room
 void handleButtonTwo() {
   setRoomBrightness(currentRoom, min(roomBrightness[currentRoom] + deltaLevel, maxLevel));
   printCurrentRoom();
   delay(debounceDelay);
 }
 
+// Use button three to select the previous room
 void handleButtonThree() {
   lcd.clear();
   rooms.trigger(PREVIOUS_ROOM);
   delay(debounceDelay);
 }
 
+// Use button four to decrease brightness for the current room
 void handleButtonFour() {
   setRoomBrightness(currentRoom, max(roomBrightness[currentRoom] - deltaLevel, minLevel));
   printCurrentRoom();
   delay(debounceDelay);
 }
 
+// Use button five to select the next room
 void handleButtonFive() {
   lcd.clear();
   rooms.trigger(NEXT_ROOM);
