@@ -89,6 +89,7 @@ Anyhow, it turns out I was making this dumb design even worse in my firmware. In
 
 - It meant I had to have logic to compare the button's current state with thresholds for "on" and "off" (basically, something like `analogRead() == 0` or `analogRead() == 1023`)
 - polling for sensor events *always* sucks; it's just not responsive to things like user input
+- I could have read the pins using `digitalRead()` just like any other pin (duh)
 
 This situation is the worst of all possible worlds for input, since the system isn't responsive to all of the button presses, and there's a lot of weird code to try to figure out if the press even happened. Fortunately, there's a better way: Pin Change Interrupts.
 
