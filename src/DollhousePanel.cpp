@@ -90,6 +90,9 @@ int currentMode = OFF_MODE;
 int debounceDelay = 250;
 long timerDebounce = 0;
 
+int niteliteTimeout = 15000;
+long timeNitelite = 0;
+
 void setup() {
   // Fire up the LCD display
   lcd.begin(16, 2);
@@ -174,6 +177,7 @@ void handleButtonOne() {
 
 // Use button two to increase brightness for the current room
 void handleButtonTwo() {
+  lcd.display();
   if (!still_bouncing()) {
     setRoomBrightness(currentRoom, min(roomBrightness[currentRoom] + deltaLevel, maxLevel));
     printCurrentRoom();
@@ -182,6 +186,7 @@ void handleButtonTwo() {
 
 // Use button three to select the previous room
 void handleButtonThree() {
+  lcd.display();
   if (!still_bouncing()) {
     lcd.clear();
     rooms.trigger(PREVIOUS_ROOM);
@@ -190,6 +195,7 @@ void handleButtonThree() {
 
 // Use button four to decrease brightness for the current room
 void handleButtonFour() {
+  lcd.display();
   if (!still_bouncing()) {
     setRoomBrightness(currentRoom, max(roomBrightness[currentRoom] - deltaLevel, minLevel));
     printCurrentRoom();
@@ -198,6 +204,7 @@ void handleButtonFour() {
 
 // Use button five to select the next room
 void handleButtonFive() {
+  lcd.display();
   if (!still_bouncing()) {
     lcd.clear();
     rooms.trigger(NEXT_ROOM);
@@ -277,11 +284,19 @@ void on_party_mode_exit(){
 }
 
 void on_nitelite_mode_enter(){
-  setCurrentMode(NITELITE_MODE);  
+  setCurrentMode(NITELITE_MODE);
+  startTimer(timerNitelite);
+}
+
+void on_nitelite_mode_run(){
+  if (isTimerExpired(timerNitelite, niteliteTimeout) {
+    lcd.noDisplay();
+    clearTimer(timerNitelite);
+  }
 }
 
 void on_nitelite_mode_exit(){
-
+  clearTimer(timerNitelite);
 }
 
 void on_off_mode_enter(){

@@ -22,6 +22,7 @@ void on_lighting_mode_exit();
 void on_party_mode_enter();
 void on_party_mode_exit();
 void on_nitelite_mode_enter();
+void on_nitelite_mode_run();
 void on_nitelite_mode_exit();
 void on_off_mode_enter();
 void on_off_mode_exit();
