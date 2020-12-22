@@ -111,19 +111,12 @@ void setup() {
 
   // enable interrupts on buttons
   // The button interface is a Smartmaker 5A5 (annoying, but it works)
-  enableInterrupt(A0, handleButtonOne, FALLING);
-  enableInterrupt(A1, handleButtonTwo, FALLING);
-  enableInterrupt(A2, handleButtonThree, FALLING);
-  enableInterrupt(A3, handleButtonFour, FALLING);
-  enableInterrupt(A4, handleButtonFive, FALLING);
+  enableInterrupt(A0, handleButtonOne, CHANGE);
+  enableInterrupt(A1, handleButtonTwo, CHANGE);
+  enableInterrupt(A2, handleButtonThree, CHANGE);
+  enableInterrupt(A3, handleButtonFour, CHANGE);
+  enableInterrupt(A4, handleButtonFive, CHANGE);
   
-  // set up some additional debouncing on rising
-  enableInterrupt(A0, debounce_on_rise, RISING);
-  enableInterrupt(A1, debounce_on_rise, RISING);
-  enableInterrupt(A2, debounce_on_rise, RISING);
-  enableInterrupt(A3, debounce_on_rise, RISING);
-  enableInterrupt(A4, debounce_on_rise, RISING);
-
   // mode FSM transitions
   modes.add_transition(&state_off_mode, &state_lighting_mode, CHANGE_LIGHT_MODE, NULL);
   modes.add_transition(&state_lighting_mode, &state_party_mode, CHANGE_LIGHT_MODE, NULL);
@@ -372,12 +365,6 @@ boolean still_bouncing() {
   }
   
   return true;
-}
-
-void debounce_on_rise() {
-  if (timerDebounce == 0 || isTimerExpired(timerDebounce, debounceDelay)) {
-    startTimer(timerDebounce);
-  }
 }
 
 void loop() {

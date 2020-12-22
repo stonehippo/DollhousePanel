@@ -43,4 +43,3 @@ void on_attic_enter();
 void on_attic_exit();
 
 boolean still_bouncing();
-void debounce_on_rise();
