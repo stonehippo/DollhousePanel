@@ -106,7 +106,7 @@ void setup() {
   tlc.begin();
   tlc.write();
 
-  // set defualt room brightness
+  // set default room brightness
   setDefaultLightLevel();
 
   // enable interrupts on buttons
@@ -349,7 +349,7 @@ void on_attic_exit() {
   
 }
 
-// Debonce timer
+// Debounce timer
 boolean still_bouncing() {
   // If the debounce timer is not running, then we can assume the buttons
   // aren't bouncing because nothing has been pressed recently
