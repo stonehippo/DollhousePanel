@@ -111,11 +111,11 @@ void setup() {
 
   // enable interrupts on buttons
   // The button interface is a Smartmaker 5A5 (annoying, but it works)
-  enableInterrupt(A0, handleButtonOne, CHANGE);
-  enableInterrupt(A1, handleButtonTwo, CHANGE);
-  enableInterrupt(A2, handleButtonThree, CHANGE);
-  enableInterrupt(A3, handleButtonFour, CHANGE);
-  enableInterrupt(A4, handleButtonFive, CHANGE);
+  enableInterrupt(A0, handleButtonOne, FALLING);
+  enableInterrupt(A1, handleButtonTwo, FALLING);
+  enableInterrupt(A2, handleButtonThree, FALLING);
+  enableInterrupt(A3, handleButtonFour, FALLING);
+  enableInterrupt(A4, handleButtonFive, FALLING);
   
   // mode FSM transitions
   modes.add_transition(&state_off_mode, &state_lighting_mode, CHANGE_LIGHT_MODE, NULL);
