@@ -87,7 +87,7 @@ int roomBrightness[LastROOM];
 int currentRoom = ALL_ROOMS;
 int currentMode = OFF_MODE;
 
-int debounceDelay = 150;
+int debounceDelay = 250;
 long timerDebounce = 0;
 
 void setup() {
