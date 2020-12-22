@@ -152,12 +152,7 @@ void setup() {
   rooms.add_transition(&state_bedroom, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_bathroom, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_attic, &state_all_rooms, RESET_ROOMS, NULL);
-  
-  // run each state machine once to initialize them; this is basically a NOOP
-  // thanks the default state
-  rooms.run_machine();
-  modes.run_machine(); 
-  
+    
   lcd.clear();
   lcd.print("Doll house");
   lcd.setCursor(0,1);
@@ -383,7 +378,7 @@ boolean still_bouncing() {
 }
 
 void loop() {
-  // do nothing; everything is handled via FSM events.
-  // We also don't need to call the ".run_machine" methods of
-  // the FSMs as there are no "on_state" handlers or timed transitions
+  // call the state machines to execute "on_state" handlers
+  modes.run_machine();
+  rooms.run_machine();
 }
