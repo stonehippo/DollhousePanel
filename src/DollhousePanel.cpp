@@ -27,7 +27,7 @@ enum events {
 // Lighting modes finite state machine
 State state_lighting_mode(on_lighting_mode_enter, NULL, &on_lighting_mode_exit);
 State state_party_mode(on_party_mode_enter, NULL, &on_party_mode_exit);
-State state_nitelite_mode(on_nitelite_mode_enter, NULL, &on_nitelite_mode_exit);
+State state_nitelite_mode(on_nitelite_mode_enter, &on_nitelite_mode_run, &on_nitelite_mode_exit);
 State state_off_mode(on_off_mode_enter, NULL, &on_off_mode_exit);
 Fsm modes(&state_off_mode);
 
