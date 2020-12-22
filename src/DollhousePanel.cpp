@@ -91,9 +91,6 @@ int debounceDelay = 100;
 void setup() {
   // Fire up the LCD display
   lcd.begin(16, 2);
-  lcd.print("Doll house");
-  lcd.setCursor(0,1);
-  lcd.print("lighting!");
 
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
@@ -150,6 +147,16 @@ void setup() {
   rooms.add_transition(&state_bedroom, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_bathroom, &state_all_rooms, RESET_ROOMS, NULL);
   rooms.add_transition(&state_attic, &state_all_rooms, RESET_ROOMS, NULL);
+  
+  // run each state machine once to initialize them; this is basically a NOOP
+  // thanks the default state
+  rooms.run_machine();
+  modes.run_machine(); 
+  
+  lce.clear();
+  lcd.print("Doll house");
+  lcd.setCursor(0,1);
+  lcd.print("lighting!");
 }
 
 // ***** Button event handlers ***** //
