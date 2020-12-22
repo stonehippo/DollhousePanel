@@ -88,7 +88,7 @@ int currentRoom = ALL_ROOMS;
 int currentMode = OFF_MODE;
 
 int debounceDelay = 150;
-long timeDebounce = 0;
+long timerDebounce = 0;
 
 void setup() {
   // Fire up the LCD display
@@ -358,7 +358,7 @@ boolean still_bouncing() {
     return false;
   }
   
-  if (timerIsExpired(timerDebounce, debounceDelay)) {
+  if (isTimerExpired(timerDebounce, debounceDelay)) {
     clearTimer(timerDebounce);
     startTimer(timerDebounce);
     return false;
