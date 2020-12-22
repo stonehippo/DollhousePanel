@@ -91,7 +91,7 @@ int debounceDelay = 250;
 long timerDebounce = 0;
 
 int niteliteTimeout = 15000;
-long timeNitelite = 0;
+long timerNitelite = 0;
 
 void setup() {
   // Fire up the LCD display
@@ -289,7 +289,7 @@ void on_nitelite_mode_enter(){
 }
 
 void on_nitelite_mode_run(){
-  if (isTimerExpired(timerNitelite, niteliteTimeout) {
+  if (isTimerExpired(timerNitelite, niteliteTimeout)) {
     lcd.noDisplay();
     clearTimer(timerNitelite);
   }
