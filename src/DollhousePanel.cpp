@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include "DollhousePanel.h"
+#include "TimingHelpers.h"
 
 #include <Adafruit_TLC59711.h>
 #include <Adafruit_NeoPixel.h>
@@ -86,7 +87,8 @@ int roomBrightness[LastROOM];
 int currentRoom = ALL_ROOMS;
 int currentMode = OFF_MODE;
 
-int debounceDelay = 100;
+int debounceDelay = 150;
+long timeDebounce = 0;
 
 void setup() {
   // Fire up the LCD display
@@ -163,38 +165,43 @@ void setup() {
 
 // Use button one to set the light mode for all rooms
 void handleButtonOne() {
-  lcd.clear();
-  rooms.trigger(RESET_ROOMS);
-  modes.trigger(CHANGE_LIGHT_MODE);
-  delay(debounceDelay);
+  if (!still_bouncing()) {
+    lcd.clear();
+    rooms.trigger(RESET_ROOMS);
+    modes.trigger(CHANGE_LIGHT_MODE);
+  }
 }
 
 // Use button two to increase brightness for the current room
 void handleButtonTwo() {
-  setRoomBrightness(currentRoom, min(roomBrightness[currentRoom] + deltaLevel, maxLevel));
-  printCurrentRoom();
-  delay(debounceDelay);
+  if (!still_bouncing()) {
+    setRoomBrightness(currentRoom, min(roomBrightness[currentRoom] + deltaLevel, maxLevel));
+    printCurrentRoom();
+  }
 }
 
 // Use button three to select the previous room
 void handleButtonThree() {
-  lcd.clear();
-  rooms.trigger(PREVIOUS_ROOM);
-  delay(debounceDelay);
+  if (!still_bouncing()) {
+    lcd.clear();
+    rooms.trigger(PREVIOUS_ROOM);
+  }
 }
 
 // Use button four to decrease brightness for the current room
 void handleButtonFour() {
-  setRoomBrightness(currentRoom, max(roomBrightness[currentRoom] - deltaLevel, minLevel));
-  printCurrentRoom();
-  delay(debounceDelay);
+  if (!still_bouncing()) {
+    setRoomBrightness(currentRoom, max(roomBrightness[currentRoom] - deltaLevel, minLevel));
+    printCurrentRoom();
+  }
 }
 
 // Use button five to select the next room
 void handleButtonFive() {
-  lcd.clear();
-  rooms.trigger(NEXT_ROOM);
-  delay(debounceDelay);
+  if (!still_bouncing()) {
+    lcd.clear();
+    rooms.trigger(NEXT_ROOM);
+  }
 }
 
 // ***** helpers ***** //
@@ -340,6 +347,24 @@ void on_attic_enter() {
 
 void on_attic_exit() {
   
+}
+
+// Debonce timer
+boolean still_bouncing() {
+  // If the debounce timer is not running, then we can assume the buttons
+  // aren't bouncing because nothing has been pressed recently
+  if (timerDebounce == 0) {
+    startTimer(timerDebounce);
+    return false;
+  }
+  
+  if (timerIsExpired(timerDebounce, debounceDelay)) {
+    clearTimer(timerDebounce);
+    startTimer(timerDebounce);
+    return false;
+  }
+  
+  return true;
 }
 
 void loop() {

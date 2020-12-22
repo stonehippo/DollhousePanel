@@ -41,3 +41,5 @@ void on_bedroom_enter();
 void on_bedroom_exit();
 void on_attic_enter();
 void on_attic_exit();
+
+boolean still_bouncing();
