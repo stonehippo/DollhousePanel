@@ -153,7 +153,7 @@ void setup() {
   rooms.run_machine();
   modes.run_machine(); 
   
-  lce.clear();
+  lcd.clear();
   lcd.print("Doll house");
   lcd.setCursor(0,1);
   lcd.print("lighting!");
